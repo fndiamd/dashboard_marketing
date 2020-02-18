@@ -7,8 +7,8 @@ $dataTable = [];
 $queryKategori = $db->query("select distinct group_layanan from mt_group_produk order by group_layanan asc")->fetchAll(PDO::FETCH_COLUMN);
 $kategori = [];
 $baseQueryFirst = "select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where id_group_produk in ";
-$lastMonth = "and tanggal between date_trunc('month', NOW() - interval '1 month') and date_trunc('day', NOW() - interval '1 month') and substring(id_outlet, -2, 5) not in('HH', 'SP')";
-$thisMonth = "and tanggal between date_trunc('month', current_date) and current_date and substring(id_outlet, -2, 5) not in('HH', 'SP')";
+$lastMonth = "and tanggal between date_trunc('month', NOW() - interval '1 month') and date_trunc('day', NOW() - interval '1 month') and substring(id_outlet, -2, 5) in('HH', 'SP')";
+$thisMonth = "and tanggal between date_trunc('month', current_date) and current_date and substring(id_outlet, -2, 5) in('HH', 'SP')";
 $dataTarget = [];
 $dataBulanLalu = [];
 $dataBulanSekarang = [];
@@ -19,7 +19,9 @@ $grafikBulanSekarang = [];
 
 $currentMonth = date("m");
 $currentYear = date("Y");
-$targetTokoModern = $db->query("select * from target_marketing where bulan = $currentMonth and tahun = $currentYear and id_kategori = 2")->fetch(PDO::FETCH_ASSOC);
+
+// id 8 untuk kategori h2h
+$targetH2h = $db->query("select * from target_marketing where bulan = $currentMonth and tahun = $currentYear and id_kategori = 8")->fetch(PDO::FETCH_ASSOC);
 $revenueBulanLalu = 0; $trxBulanLalu = 0;
 $revenueBulanIni = 0; $trxBulanIni = 0;
 
@@ -28,7 +30,7 @@ foreach ($queryKategori as $ktg) {
     array_push($kategori, substr($ktg, 4));
     $dataBulanLalu[substr($ktg, 4)] = $db->query($baseQueryFirst . "(select id_group_produk from mt_group_produk as mgp where mgp.group_layanan = '$ktg')" . $lastMonth)->fetchAll(PDO::FETCH_ASSOC);
     $dataBulanSekarang[substr($ktg, 4)] = $db->query($baseQueryFirst . "(select id_group_produk from mt_group_produk as mgp where mgp.group_layanan = '$ktg')" . $thisMonth)->fetchAll(PDO::FETCH_ASSOC);
-    $dataTarget[substr($ktg, 4)] = $db->query("select * from target_marketing_group_produk where group_produk = '$ktg' and id_kategori = 2")->fetchAll(PDO::FETCH_ASSOC);
+    $dataTarget[substr($ktg, 4)] = $db->query("select * from target_marketing_group_produk where group_produk = '$ktg' and id_kategori = 8")->fetchAll(PDO::FETCH_ASSOC);
 }
 
 $counter = 1;
