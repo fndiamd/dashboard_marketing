@@ -44,7 +44,7 @@
                     $arrow = 'ion-arrow-down-c';
                 }
                 ?>
-                <li class="ion-arrow-down-c" data-pack="default"></li> <?= number_format(abs($retail['trx'] - $retailPass['trx']),0, ',', '.') ?> transaction
+                <li class="ion-arrow-down-c" data-pack="default"></li> <?= number_format(abs($retail['trx'] - $retailPass['trx']), 0, ',', '.') ?> transaction
             </small>
         </div>
         <div class="card mt-2">
@@ -67,7 +67,7 @@
                     $arrow = 'ion-arrow-down-c';
                 }
                 ?>
-                <li class="ion-arrow-up-c" data-pack="default"></li> <?= number_format(abs($h2h['trx'] - $h2hPass['trx']),0, ',', '.') ?> transaction
+                <li class="ion-arrow-up-c" data-pack="default"></li> <?= number_format(abs($h2h['trx'] - $h2hPass['trx']), 0, ',', '.') ?> transaction
             </small>
         </div>
     </div>
@@ -105,13 +105,13 @@
             foreach ($dataTable as $r) {
             ?>
                 <tr>
-                    <td><?php echo $r['kategori'] ?></td>
-                    <td align="right"><?= $r['target']['trx'] ?></td>
-                    <td align="right"><?= $r['target']['rev'] ?></td>
-                    <td align="right"><?= $r['bulan_lalu']['trx'] ?></td>
-                    <td align="right"><?= $r['bulan_lalu']['rev'] ?></td>
+                    <td style="min-width:150px"><?php echo $r['kategori'] ?></td>
+                    <td align="right"><?= number_format($r['target']['trx'], 0, ',', '.') ?></td>
+                    <td align="right"><?= number_format($r['target']['rev'], 0, ',', '.') ?></td>
+                    <td align="right"><?= number_format($r['bulan_lalu']['trx'], 0, ',', '.') ?></td>
+                    <td align="right"><?= number_format($r['bulan_lalu']['rev'], 0, ',', '.') ?></td>
                     <td align="right">
-                        <?= $r['bulan_ini']['trx'] ?>
+                        <?= number_format($r['bulan_ini']['trx'], 0, ',', '.') ?>
                         <?php if (($r['bulan_ini']['trx'] - $r['bulan_lalu']['trx']) > 0) : ?>
                             <li class="ion-arrow-up-c" data-pack="default"></li>
                         <?php else : ?>
@@ -119,19 +119,19 @@
                         <?php endif; ?>
                     </td>
                     <td align="right">
-                        <?= $r['bulan_ini']['rev'] ?>
+                        <?= number_format($r['bulan_ini']['rev'], 0, ',', '.') ?>
                         <?php if (($r['bulan_ini']['rev'] - $r['bulan_lalu']['rev']) > 0) : ?>
                             <li class="ion-arrow-up-c" data-pack="default"></li>
                         <?php else : ?>
                             <li class="ion-arrow-down-c" data-pack="default"></li>
                         <?php endif; ?>
                     </td>
-                    <td align="right"><?= $r['deviasi']['trx'] ?></td>
-                    <td align="right"><?= $r['deviasi']['rev'] ?></td>
-                    <td align="right"><?= $r['deviasi_okr']['trx'] ?></td>
-                    <td align="right"><?= $r['deviasi_okr']['rev'] ?></td>
-                    <td align="right"><?= $r['okr']['trx'] ?></td>
-                    <td align="right"><?= $r['okr']['rev'] ?></td>
+                    <td align="right"><?= number_format($r['deviasi']['trx'], 0, ',', '.') ?></td>
+                    <td align="right"><?= number_format($r['deviasi']['rev'], 0, ',', '.') ?></td>
+                    <td align="right"><?= number_format($r['deviasi_okr']['trx'], 0, ',', '.') ?></td>
+                    <td align="right"><?= number_format($r['deviasi_okr']['rev'], 0, ',', '.') ?></td>
+                    <td align="right"><?= number_format($r['okr']['trx'], 2, ',', '.') ?>%</td>
+                    <td align="right"><?= number_format($r['okr']['rev'], 2, ',', '.') ?>%</td>
                 </tr>
             <?php } ?>
         </tbody>
@@ -139,9 +139,9 @@
 </div>
 <script src="assets/highcharts/highcharts.js?v=2"></script>
 <script type="text/javascript">
-    var targetRevenue = <?= json_encode($targetRevenue) ?>;
-    var revenueLalu = <?= json_encode($resultRevenueLalu) ?>;
-    var revenueSekarang = <?= json_encode($resultRevenueSekarang) ?>;
+    var dataTarget = <?= json_encode($grafikTarget) ?>;
+    var dataBulanLalu = <?= json_encode($grafikBulanLalu) ?>;
+    var dataBulanSekarang = <?= json_encode($grafikBulanSekarang) ?>;
     Highcharts.theme = {
         colors: ['#51d0de', '#bf4aa8', '#d9d9d9', '#4f5f76', '#6B7A8F', '#007f4f',
             '#0f2862', '#9e363a', '#1561ad'
@@ -177,20 +177,20 @@
             marker: {
                 symbol: 'cirle'
             },
-            data: targetRevenue
+            data: dataTarget
 
         }, {
             name: 'Bulan Lalu',
             marker: {
                 symbol: 'cirle'
             },
-            data: revenueLalu
+            data: dataBulanLalu
         }, {
             name: 'Bulan Ini',
             marker: {
                 symbol: 'cirle'
             },
-            data: revenueSekarang
+            data: dataBulanSekarang
         }]
     });
 </script>

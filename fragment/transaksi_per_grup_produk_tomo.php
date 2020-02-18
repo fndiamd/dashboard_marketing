@@ -1,22 +1,37 @@
+<?php include('../core/tomo.php') ?>
 <div class="row">
   <div class="col-md-3">
     <div class="card">
       Target Toko Modern
-      <h5 class="purple">23.000.000</h5>
-      <small class="text-muted">1200 transaction</small>
+      <h5 class="purple"><?= number_format($targetTokoModern['target_revenue'], 0, ',', '.')?></h5>
+      <small class="text-muted"><?= number_format($targetTokoModern['target_transaksi'], 0, ',', '.')?> transaction</small>
     </div>
     <div class="card mt-1">
       Last Month
-      <h5 class="purple">11.000.000</h5>
-      <small class="text-muted">200 transaction</small>
+      <h5 class="purple"><?= number_format($revenueBulanLalu, 0, ',', '.')?></h5>
+      <small class="text-muted"><?= number_format($trxBulanLalu, 0, ',', '.')?> transaction</small>
     </div>
     <div class="card mt-1">
       This Month
       <h5 class="purple">
-        <li class="ion-arrow-up-c" data-pack="default"></li> 12.000.000
+        <?php 
+          if($revenueBulanIni - $revenueBulanLalu > 0){
+            $arrow = 'ion-arrow-up-c';
+          }else{
+            $arrow = 'ion-arrow-down-c';
+          }
+        ?>
+        <li class="<?= $arrow?>" data-pack="default"></li> <?= number_format($revenueBulanIni, 0, ',', '.')?>
       </h5>
-      <small class="text-muted">1200 transaction</small>
-      <i><small class="text-muted">(+200 transaction)</small></i>
+      <small class="text-muted"><?= number_format($trxBulanIni, 0, ',', '.')?> transaction</small>
+      <?php 
+          if($trxBulanIni - $trxBulanLalu > 0){
+            $operator = '+';
+          }else{
+            $operator = '';
+          }
+        ?>
+      <i><small class="text-muted">(<?= $operator;?><?= number_format($trxBulanIni - $trxBulanLalu, 0, ',', '.')?> transaction)</small></i>
     </div>
   </div>
   <div class="col-md-9">
@@ -24,7 +39,7 @@
   </div>
 </div>
 <div class="overflow-x">
-  <table width="100%">
+  <table width="120%">
     <tbody>
       <tr>
         <th colspan="1" rowspan="2" class="th">POIN</th>
@@ -50,50 +65,36 @@
         <th>Rev</th>
       </tr>
       <?php
-      $arr = array(
-        'PLN/LISTRIK RETIL',
-        'TELKOM',
-        'SELULER PASCABAYAR',
-        'TV KABEL',
-        'PDAM',
-        'MULTI FINANCE',
-        'KARTU KREDIT',
-        'GAME ONLINE',
-        'PULSA SELULER',
-        'ASURANSI',
-        'RUMAH ZAKAT',
-        'IKLAN/ADVERTISING',
-        'BRANCHLESS BANKING',
-        'PGN',
-        'E-MONEY',
-        'TIKET KA(TKAI,MKAI,PKAI)',
-        'RAILINK',
-        'TIKET PESAWAT',
-        'HOTEL',
-        'TIKET TRAVEL',
-        'CAR RENTAL',
-        'TIKET EVENT,KONSER,BIOSKOP,DLL',
-        'PELNI',
-        'FINTECH,PG,LAIN-LAIN'
-      );
-      foreach ($arr as $r) {
+      foreach ($dataTable as $r) {
       ?>
         <tr>
-          <td><?php echo $r ?></td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?><li class="ion-arrow-up-c" data-pack="default"></li>
+          <td style="min-width:150px"><?php echo $r['kategori'] ?></td>
+          <td align="right"><?= number_format($r['target']['trx'],0,',','.') ?></td>
+          <td align="right"><?= number_format($r['target']['rev'],0,',','.') ?></td>
+          <td align="right"><?= number_format($r['bulan_lalu']['trx'],0,',','.') ?></td>
+          <td align="right"><?= number_format($r['bulan_lalu']['rev'],0,',','.') ?></td>
+          <td align="right">
+            <?= number_format($r['bulan_ini']['trx'],0,',','.')?>
+            <?php if (($r['bulan_ini']['trx'] - $r['bulan_lalu']['trx']) > 0) : ?>
+              <li class="ion-arrow-up-c" data-pack="default"></li>
+            <?php else : ?>
+              <li class="ion-arrow-down-c" data-pack="default"></li>
+            <?php endif; ?>
           </td>
-          <td align="right"><?php echo rand() ?><li class="ion-arrow-down-c" data-pack="default"></li>
+          <td align="right">
+            <?= number_format($r['bulan_ini']['rev'],0,',','.') ?>
+            <?php if (($r['bulan_ini']['rev'] - $r['bulan_lalu']['rev']) > 0) : ?>
+              <li class="ion-arrow-up-c" data-pack="default"></li>
+            <?php else : ?>
+              <li class="ion-arrow-down-c" data-pack="default"></li>
+            <?php endif; ?>
           </td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?></td>
-          <td align="right"><?php echo rand() ?></td>
+          <td align="right"><?= number_format($r['deviasi']['trx'],0,',','.') ?></td>
+          <td align="right"><?= number_format($r['deviasi']['rev'],0,',','.') ?></td>
+          <td align="right"><?= number_format($r['deviasi_okr']['trx'],0,',','.') ?></td>
+          <td align="right"><?= number_format($r['deviasi_okr']['rev'],0,',','.') ?></td>
+          <td align="right"><?= number_format($r['okr']['trx'],2,',',',') ?></td>
+          <td align="right"><?= number_format($r['okr']['rev'],2,',',',') ?></td>
         </tr>
       <?php } ?>
     </tbody>
@@ -102,6 +103,10 @@
 </div>
 <script src="assets/highcharts/highcharts.js?v=2"></script>
 <script type="text/javascript">
+  var dataTarget = <?= json_encode($grafikTarget)?>;
+  var dataBulanLalu = <?= json_encode($grafikBulanLalu) ?>;
+  var dataBulanSekarang = <?= json_encode($grafikBulanSekarang) ?>;
+
   Highcharts.theme = {
     colors: ['#51d0de', '#bf4aa8', '#d9d9d9', '#4f5f76', '#6B7A8F', '#007f4f',
       '#0f2862', '#9e363a', '#1561ad'
@@ -116,7 +121,7 @@
       text: 'Grafik Transaksi Per Grup Produk Tomo'
     },
     xAxis: {
-      categories: ['<?php echo implode("','", $arr) ?>']
+      categories: ['<?php echo implode("','", $kategori) ?>']
     },
     yAxis: {
       title: {
@@ -137,20 +142,20 @@
       marker: {
         symbol: 'cirle'
       },
-      data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2]
+      data: dataTarget
 
     }, {
       name: 'Bulan Lalu',
       marker: {
         symbol: 'cirle'
       },
-      data: [4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6]
+      data: dataBulanLalu 
     }, {
       name: 'Bulan Ini',
       marker: {
         symbol: 'cirle'
       },
-      data: [4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6]
+      data: dataBulanSekarang 
     }]
   });
 </script>
