@@ -1,4 +1,4 @@
-<?php include('../core/dashboard.php') ?>
+<?php @include('../core/dashboard.php') ?>
 <div class="row">
     <div class="col-md-3">
         <div class="card">

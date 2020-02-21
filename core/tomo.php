@@ -88,8 +88,8 @@ foreach ($kategori as $ktg) {
             'rev' => $dataTarget[$ktg][0]['target_revenue'] - $dataBulanSekarang[$ktg][0]['rev']
         ],
         'okr' => [
-            'trx' => ($dataBulanSekarang[$ktg][0]['trx'] / $dataTarget[$ktg][0]['target_transaksi']) * 100 .'%',
-            'rev' => ($dataBulanSekarang[$ktg][0]['rev'] / $dataTarget[$ktg][0]['target_revenue']) * 100 .'%',
+            'trx' => ($dataBulanSekarang[$ktg][0]['trx'] / $dataTarget[$ktg][0]['target_transaksi']) * 100,
+            'rev' => ($dataBulanSekarang[$ktg][0]['rev'] / $dataTarget[$ktg][0]['target_revenue']) * 100,
         ]
     ];
     array_push($dataTable, $data);

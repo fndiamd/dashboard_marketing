@@ -93,8 +93,8 @@
           <td align="right"><?= number_format($r['deviasi']['rev'],0,',','.') ?></td>
           <td align="right"><?= number_format($r['deviasi_okr']['trx'],0,',','.') ?></td>
           <td align="right"><?= number_format($r['deviasi_okr']['rev'],0,',','.') ?></td>
-          <td align="right"><?= number_format($r['okr']['trx'],2,',',',') ?></td>
-          <td align="right"><?= number_format($r['okr']['rev'],2,',',',') ?></td>
+          <td align="right"><?= number_format($r['okr']['trx'],2,',',',') ?>%</td>
+          <td align="right"><?= number_format($r['okr']['rev'],2,',',',') ?>%</td>
         </tr>
       <?php } ?>
     </tbody>
