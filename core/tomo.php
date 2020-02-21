@@ -19,6 +19,7 @@ $grafikBulanSekarang = [];
 
 $currentMonth = date("m");
 $currentYear = date("Y");
+// id 2 untuk kategori tomo
 $targetTokoModern = $db->query("select * from target_marketing where bulan = $currentMonth and tahun = $currentYear and id_kategori = 2")->fetch(PDO::FETCH_ASSOC);
 $revenueBulanLalu = 0; $trxBulanLalu = 0;
 $revenueBulanIni = 0; $trxBulanIni = 0;
@@ -28,6 +29,7 @@ foreach ($queryKategori as $ktg) {
     array_push($kategori, substr($ktg, 4));
     $dataBulanLalu[substr($ktg, 4)] = $db->query($baseQueryFirst . "(select id_group_produk from mt_group_produk as mgp where mgp.group_layanan = '$ktg')" . $lastMonth)->fetchAll(PDO::FETCH_ASSOC);
     $dataBulanSekarang[substr($ktg, 4)] = $db->query($baseQueryFirst . "(select id_group_produk from mt_group_produk as mgp where mgp.group_layanan = '$ktg')" . $thisMonth)->fetchAll(PDO::FETCH_ASSOC);
+    // id 2 untuk kategori tomo
     $dataTarget[substr($ktg, 4)] = $db->query("select * from target_marketing_group_produk where group_produk = '$ktg' and id_kategori = 2")->fetchAll(PDO::FETCH_ASSOC);
 }
 

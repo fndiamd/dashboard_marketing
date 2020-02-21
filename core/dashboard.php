@@ -4,8 +4,8 @@ require_once('connection.php');
 $dataTable = [];
 
 // Select kategori
-$getKategori = $db->query("select * from kategori order by id_kategori asc")->fetchAll(PDO::FETCH_ASSOC);
-$kategori = [];
+$getKategori = $db->query("select * from kategori where id_kategori != 8 and id_kategori != 10 order by id_kategori asc")->fetchAll(PDO::FETCH_ASSOC);
+$dataKategori = [];
 
 // Base Query
 $baseQuery = "select sum(jml_transaksi) as trx, sum(nilai_jual) as rev from resume_transaksi_outlet_harian";
@@ -20,22 +20,25 @@ $sbfPass = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx 
     ->fetch(PDO::FETCH_ASSOC);
 
 // Outlet Retail
-$retail = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where id_outlet not like 'HH%' or id_outlet not like 'SP%' and tanggal between date_trunc('month', current_date) and current_date")
+$retail = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where substring(id_outlet, -2, 5) not in('HH', 'SP') and tanggal between date_trunc('month', current_date) and current_date")
     ->fetch(PDO::FETCH_ASSOC);
-$retailPass = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where id_outlet not like 'HH%' or id_outlet not like 'SP%' and tanggal between date_trunc('month', NOW() - interval '1 month') and date_trunc('day', NOW() - interval '1 month')")
+$retailPass = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where substring(id_outlet, -2, 5) not in('HH', 'SP') and tanggal between date_trunc('month', NOW() - interval '1 month') and date_trunc('day', NOW() - interval '1 month')")
     ->fetch(PDO::FETCH_ASSOC);
 
 // H2H
-$h2h = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where id_outlet like 'HH%' or id_outlet like 'SP%' and tanggal between date_trunc('month', current_date) and current_date")
+$h2h = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where substring(id_outlet, -2, 5) in('HH', 'SP') and tanggal between date_trunc('month', current_date) and current_date")
     ->fetch(PDO::FETCH_ASSOC);
-$h2hPass = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where id_outlet like 'HH%' or id_outlet like 'SP%' and tanggal between date_trunc('month', NOW() - interval '1 month') and date_trunc('day', NOW() - interval '1 month')")
+$h2hPass = $db->query("select sum(nilai_jual) as rev, sum(jml_transaksi) as trx from resume_transaksi_outlet_harian where substring(id_outlet, -2, 5) in('HH', 'SP') and tanggal between date_trunc('month', NOW() - interval '1 month') and date_trunc('day', NOW() - interval '1 month')")
     ->fetch(PDO::FETCH_ASSOC);
 
 foreach ($getKategori as $ktg) {
-    array_push($kategori, $ktg['kategori']);
+    array_push($dataKategori, $ktg['kategori']);
 }
 
-$dataTarget = $db->query("select * from target_marketing order by id_kategori asc")->fetchAll(PDO::FETCH_ASSOC);
+
+$currentMonth = date("m");
+$currentYear = date("Y");
+$dataTarget = $db->query("select * from target_marketing where bulan = $currentMonth and tahun = $currentYear and id_kategori != 8 and id_kategori != 10 order by id_kategori asc")->fetchAll(PDO::FETCH_ASSOC);
 
 // Data Bulan lalu
 $dataBulanLalu = [];
@@ -76,10 +79,9 @@ foreach ($dataBulanSekarang as $dbs) {
     array_push($grafikBulanSekarang, intval($dbs[0]['rev']));
 }
 
-for ($i = 0; $i < count($kategori); $i++) {
-    $ktg = strtolower($kategori[$i]);
+for ($i = 0; $i < count($dataKategori); $i++) {
     $data = [
-        'kategori' => $kategori[$i],
+        'kategori' => $dataKategori[$i],
         'target' => [
             'trx' => $dataTarget[$i]['target_transaksi'],
             'rev' => $dataTarget[$i]['target_revenue']

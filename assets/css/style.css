@@ -113,3 +113,8 @@ a {
 .overflow-x{
     overflow-x: scroll;
 }
+
+.btn-outline-success:focus, .btn.focus {
+    outline:0;
+    box-shadow: none;
+}
